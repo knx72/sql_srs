@@ -23,7 +23,6 @@ with st.sidebar:
         index=None,
         placeholder="Select a theme...",
     )
-    st.write("You selected:", theme)
 
     if theme:
         st.write(f"You selected {theme}")
@@ -31,7 +30,12 @@ with st.sidebar:
     else:
         select_exercise_query = f"SELECT * FROM memory_state"
 
-    exercise = con.execute(f"SELECT * FROM memory_state WHERE theme = '{theme}'").df().sort_values("last_reviewed").reset_index()
+    exercise = (
+        con.execute(select_exercise_query)
+        .df()
+        .sort_values("last_reviewed")
+        .reset_index(drop=True)
+    )
     st.write(exercise)
 
     exercise_name = exercise.loc[0]["exercise_name"]
